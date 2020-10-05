@@ -1,0 +1,23 @@
+.submitWrapper {
+  position: relative;
+}
+
+.submitProgress {
+  position: absolute;
+  align-self: center;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+}
+
+.input {
+  margin: 10px !important;
+}
+
+.actionsRow {
+  padding-top: 10px;
+}

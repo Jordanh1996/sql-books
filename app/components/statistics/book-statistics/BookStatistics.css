@@ -1,0 +1,13 @@
+.input {
+  max-width: 600px;
+  width: 100%;
+  margin: 30px !important;
+  align-self: center !important;
+  justify-self: center !important;
+}
+
+.lowerBox {
+  max-width: 500px !important;
+  width: 100% !important;
+  margin: 30px !important;
+}

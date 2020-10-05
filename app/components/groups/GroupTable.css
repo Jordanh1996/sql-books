@@ -1,0 +1,7 @@
+.container {
+  height: 100%;
+  width: 90%;
+  max-width: 1800px;
+  margin-bottom: 20px;
+  align-self: center;
+}

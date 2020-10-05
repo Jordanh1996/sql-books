@@ -1,0 +1,12 @@
+.listItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+.listItemValue {
+  text-align: end;
+}
+
+.title {
+  margin-top: 20px;
+}

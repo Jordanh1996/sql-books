@@ -1,0 +1,11 @@
+.highlight {
+  background: yellow;
+}
+
+.paginationWrapper {
+  margin-right: auto;
+}
+
+.paginationText {
+  align-self: center;
+}

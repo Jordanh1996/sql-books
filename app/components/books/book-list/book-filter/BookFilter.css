@@ -1,0 +1,15 @@
+.container {
+  max-width: 1200px;
+  width: 100%;
+  padding: 10px;
+  padding-top: 16px;
+  margin-bottom: 20px;
+}
+
+.actionsRow {
+  padding-top: 30px;
+}
+
+.button {
+  margin: 10px !important;
+}

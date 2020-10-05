@@ -1,0 +1,8 @@
+{
+  "BOOKS": "/",
+  "WORDS": "/words",
+  "GROUPS": "/groups",
+  "PHRASES": "/phrases",
+  "STATISTICS": "/statistics",
+  "IMPORT_EXPORT": "/importexport"
+}
