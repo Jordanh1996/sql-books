@@ -1,8 +1,5 @@
 import React, { useState, useReducer, useCallback } from 'react';
 import clsx from 'clsx';
-import styles from './GroupForm.css';
-import { addGroup } from '../../../db/utils/add-group';
-import { WordList } from '../../word-list/WordList';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -13,8 +10,11 @@ import BackspaceRoundedIcon from '@material-ui/icons/BackspaceRounded';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { WordList } from '../../word-list/WordList';
+import { addGroup } from '../../../db/utils/add-group';
+import styles from './GroupForm.css';
 
-enum actions {
+enum Actions {
   NAME_CHANGE = 'NAME_CHANGE',
   WORD_CHANGE = 'WORD_CHANGE',
   ADD_WORD = 'ADD_WORD',
@@ -29,11 +29,11 @@ interface FormState {
 }
 
 type Action =
-  | { type: actions.NAME_CHANGE; payload: string }
-  | { type: actions.WORD_CHANGE; payload: string }
-  | { type: actions.ADD_WORD; payload: string }
-  | { type: actions.REMOVE_WORD; payload: string }
-  | { type: actions.CLEAR };
+  | { type: Actions.NAME_CHANGE; payload: string }
+  | { type: Actions.WORD_CHANGE; payload: string }
+  | { type: Actions.ADD_WORD; payload: string }
+  | { type: Actions.REMOVE_WORD; payload: string }
+  | { type: Actions.CLEAR };
 
 const initialState = {
   name: '',
@@ -43,22 +43,22 @@ const initialState = {
 
 const reducer = (state: FormState, action: Action): FormState => {
   switch (action.type) {
-    case actions.NAME_CHANGE:
+    case Actions.NAME_CHANGE:
       return { ...state, name: action.payload };
-    case actions.WORD_CHANGE:
+    case Actions.WORD_CHANGE:
       return { ...state, word: action.payload };
-    case actions.ADD_WORD:
+    case Actions.ADD_WORD:
       return {
         ...state,
         words: Array.from(new Set(state.words.concat(action.payload))),
         word: initialState.word,
       };
-    case actions.REMOVE_WORD:
+    case Actions.REMOVE_WORD:
       return {
         ...state,
         words: state.words.filter((word) => word !== action.payload),
       };
-    case actions.CLEAR:
+    case Actions.CLEAR:
       return initialState;
     default:
       return state;
@@ -78,7 +78,7 @@ export const GroupForm = ({ onAddGroup = () => {} }: GroupFormProps) => {
       setLoading(true);
       await addGroup(formState);
       onAddGroup();
-      dispatch({ type: actions.CLEAR });
+      dispatch({ type: Actions.CLEAR });
     } catch (e) {
       console.error(e);
     } finally {
@@ -94,7 +94,7 @@ export const GroupForm = ({ onAddGroup = () => {} }: GroupFormProps) => {
         <OutlinedInput
           value={formState.name}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            dispatch({ type: actions.NAME_CHANGE, payload: e.target.value })
+            dispatch({ type: Actions.NAME_CHANGE, payload: e.target.value })
           }
           labelWidth={44}
         />
@@ -106,7 +106,7 @@ export const GroupForm = ({ onAddGroup = () => {} }: GroupFormProps) => {
           value={formState.word}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             dispatch({
-              type: actions.WORD_CHANGE,
+              type: Actions.WORD_CHANGE,
               payload: e.target.value.replace(/[^a-zA-Z]/gi, ''),
             })
           }
@@ -116,7 +116,7 @@ export const GroupForm = ({ onAddGroup = () => {} }: GroupFormProps) => {
                 disabled={!formState.word.length}
                 onClick={() =>
                   dispatch({
-                    type: actions.ADD_WORD,
+                    type: Actions.ADD_WORD,
                     payload: formState.word.toLowerCase(),
                   })
                 }
@@ -134,12 +134,12 @@ export const GroupForm = ({ onAddGroup = () => {} }: GroupFormProps) => {
         <WordList
           words={formState.words}
           onDelete={(word: string) =>
-            dispatch({ type: actions.REMOVE_WORD, payload: word })
+            dispatch({ type: Actions.REMOVE_WORD, payload: word })
           }
         />
       </div>
 
-      <div className={clsx('row', styles.actionsRow)}>
+      <div className={clsx('row', styles.ActionsRow)}>
         <div className={clsx(styles.submitWrapper, styles.input)}>
           <Button
             variant="contained"
@@ -160,7 +160,7 @@ export const GroupForm = ({ onAddGroup = () => {} }: GroupFormProps) => {
             variant="contained"
             color="primary"
             disabled={loading}
-            onClick={() => dispatch({ type: actions.CLEAR })}
+            onClick={() => dispatch({ type: Actions.CLEAR })}
             startIcon={<BackspaceRoundedIcon />}
           >
             Clear

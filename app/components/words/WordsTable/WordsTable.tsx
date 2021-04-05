@@ -4,7 +4,7 @@ import styles from './WordsTable.css';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import { VirtualizedTable } from '../../common/VirtualizedTable';
-import { WordAppearance } from '../../../db/tables/word/queries/select-words';
+import { WordAppearance } from '../../../db/tables/word-appearance/queries/select-words-appearances';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { OpenedBook, BookModal } from '../../common/BookModal';
 

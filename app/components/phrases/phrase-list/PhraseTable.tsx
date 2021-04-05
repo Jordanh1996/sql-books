@@ -35,9 +35,6 @@ export const PhraseTable = ({
             >
               <SearchIcon />
             </IconButton>
-            <IconButton color="primary" key="edit">
-              <EditRoundedIcon />
-            </IconButton>
             <IconButton
               color="secondary"
               onClick={() => onDelete(phrase)}

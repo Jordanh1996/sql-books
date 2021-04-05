@@ -9,7 +9,7 @@ import { VirtualizedTable } from '../../common/VirtualizedTable';
 import { BookModal, OpenedBook } from '../../common/BookModal';
 
 export interface MatchTableProps {
-  matches: PhraseMatch[];
+  matches: (PhraseMatch & { phrase: string })[];
 }
 
 export const MatchTable = ({ matches }: MatchTableProps) => {

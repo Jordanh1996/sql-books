@@ -1,6 +1,6 @@
-import { Word } from '../../db/tables/word/word.interface';
+import { WordAppearance } from '../../db/tables/word-appearance/word-appearance.interface';
 
-export const getWords = (content: string): Omit<Word, 'book_id'>[] => {
+export const getWords = (content: string): (Omit<WordAppearance, 'book_id'> & { word: string })[] => {
   const lines = content.split('\n');
   const words = [];
   let offset = 0;

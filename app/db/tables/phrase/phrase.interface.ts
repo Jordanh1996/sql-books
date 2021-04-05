@@ -1,8 +1,8 @@
-export interface NewPhrase {
-  phrase: string;
-}
-
-export interface Phrase extends NewPhrase {
+export interface Phrase {
   phrase_id: number;
   word_count: number;
+}
+
+export interface PhraseWithWords extends Phrase {
+  phrase: string;
 }

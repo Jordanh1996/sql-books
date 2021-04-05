@@ -1,4 +1,4 @@
 export interface GroupWord {
   group_id: number;
-  word: string;
+  word_id: string;
 }

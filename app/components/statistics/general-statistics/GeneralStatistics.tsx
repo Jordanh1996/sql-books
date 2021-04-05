@@ -19,7 +19,7 @@ export const GeneralStatistics = () => {
     countTable('phrase').then(setPhraseCount);
     avgTable('group_word', 'group_id').then(setGroupAvg);
     avgTable('phrase_word', 'phrase_id').then(setPhraseAvg);
-    avgTable('word', 'book_id').then(setWordAvg);
+    avgTable('word_appearance', 'book_id').then(setWordAvg);
   }, []);
 
   useEffect(() => {

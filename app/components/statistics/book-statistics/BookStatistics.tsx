@@ -15,7 +15,7 @@ import {
   averageWords,
   averageLetters,
   sumLetters,
-} from '../../../db/tables/word/queries/select-words';
+} from '../../../db/tables/word-appearance/queries/select-words-appearances';
 import clsx from 'clsx';
 import { displayDecimal } from '../../../utils/math/afterDotNum';
 

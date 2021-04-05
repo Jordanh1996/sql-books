@@ -1,26 +1,29 @@
 import _ from 'lodash';
 import { connection } from '../connection';
-import { insertGroup } from '../tables/group/queries/insert-group';
-import { insertGroupWords } from '../tables/group-word/queries/insert-group-words';
+import { insertPhraseWords } from '../tables/phrase-word/queries/insert-phrase-words';
+import { insertPhrase } from '../tables/phrase/queries/insert-phrase';
 import { selectWords } from '../tables/word/queries/select-words';
 import { upsertWords } from '../tables/word/queries/upsert-words';
 
-export interface AddGroupParams {
-  name: string;
-  words: string[];
+export interface AddPhraseParams {
+  phrase: string;
 }
 
-export const addGroup = async ({
-  name,
-  words: wordsStrings,
-}: AddGroupParams): Promise<void> => {
-  if (!wordsStrings.length) return;
+export const addPhrase = async ({
+  phrase,
+}: AddPhraseParams): Promise<void> => {
+  if (
+    !phrase.length
+    || !phrase.match(/^[a-z]+( [a-z]+)+$/)
+  ) return;
+
+  const wordsStrings = phrase.split(' ');
 
   try {
     await connection.query('BEGIN');
 
     // INSERT the group
-    const group_id = await insertGroup({ name });
+    const phrase_id = await insertPhrase({ word_count: wordsStrings.length });
 
     // INSERT the words if they don't exist
     await upsertWords(wordsStrings);
@@ -31,8 +34,8 @@ export const addGroup = async ({
       'word'
     );
 
-    await insertGroupWords(
-      group_id,
+    await insertPhraseWords(
+      phrase_id,
       wordsStrings.map(word => words[word].word_id)
     );
 

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import clsx from 'clsx';
 import styles from './PhrasesPage.css';
 import { PhraseList } from '../../components/phrases/phrase-list/PhraseList';
-import { Phrase } from '../../db/tables/phrase/phrase.interface';
+import { Phrase, PhraseWithWords } from '../../db/tables/phrase/phrase.interface';
 import {
   selectPhrases,
   findPhrase,
@@ -11,23 +11,28 @@ import {
 import { deletePhrase } from '../../db/tables/phrase/queries/delete-phrase';
 import { PhraseForm } from '../../components/phrases/phrase-form/PhraseForm';
 import { MatchTable } from '../../components/phrases/match-table/MatchTable';
+import { Filter } from '../../components/phrases/phrase-filter/PhraseFilter';
 
 export const PhrasesPage = () => {
   const [phrases, setPhrases] = useState<Phrase[]>([]);
-  const [lastFilter, setLastFilter] = useState<unknown>({});
-  const [matches, setMatches] = useState<PhraseMatch[]>([]);
+  const [lastFilter, setLastFilter] = useState<Filter>({ phrase: '' });
+  const [matches, setMatches] = useState<(PhraseMatch & { phrase: string })[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const onSearchClick = useCallback(async (phrase: Phrase) => {
+  const onSearchClick = useCallback(async (phrase: PhraseWithWords) => {
     const matches = await findPhrase(phrase.phrase_id);
-    setMatches(matches);
+
+    setMatches(matches.map(match => ({ ...match, phrase: phrase.phrase })));
   }, []);
 
   const getPhrases = useCallback(
-    async (options: any = {}) => {
+    async (options: Filter = { phrase: '' }) => {
       setLastFilter(options);
       setLoading(true);
-      const phrases = await selectPhrases(options);
+      let phrases = await selectPhrases();
+      if (options.phrase) {
+        phrases = phrases.filter(phrase => phrase.phrase.includes(options.phrase));
+      }
       setPhrases(phrases);
       setLoading(false);
     },

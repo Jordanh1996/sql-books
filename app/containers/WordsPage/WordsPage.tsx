@@ -16,7 +16,7 @@ import {
   WordCount,
   WordAppearance,
   selectWordsAppearances,
-} from '../../db/tables/word/queries/select-words';
+} from '../../db/tables/word-appearance/queries/select-words-appearances';
 import { WordTable } from '../../components/words/WordsTable/WordsTable';
 
 export const WordsPage = () => {
@@ -31,6 +31,7 @@ export const WordsPage = () => {
     const params: SelectWordsOptions = {};
     if (filter.books.length) params.books = filter.books;
     if (filter.groups.length) params.groups = filter.groups;
+    if (filter.line) params.line = Number(filter.line);
 
     setLastFilter(filter);
     const words = await selectWordsCount(params);
@@ -62,8 +63,12 @@ export const WordsPage = () => {
       if (!selectedWords.length) return setWordAppearances([]);
 
       const options: SelectWordsOptions = {};
-      if (lastFilter.books && lastFilter.books.length)
+      if (lastFilter?.books?.length)
         options.books = lastFilter.books;
+      if (lastFilter?.groups?.length)
+        options.groups = lastFilter.groups;
+      if (lastFilter?.line)
+        options.line = Number(lastFilter.line);
 
       setWordAppearances(
         await selectWordsAppearances({ words: selectedWords, options })

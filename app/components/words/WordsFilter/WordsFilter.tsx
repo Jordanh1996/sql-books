@@ -56,6 +56,8 @@ const reducer = (state: Filter, action: Action): Filter => {
       return { ...state, books: action.payload };
     case actions.CHANGE_GROUPS:
       return { ...state, groups: action.payload };
+    case actions.CHANGE_LINE:
+      return { ...state, line: action.payload };
     case actions.CLEAR:
       return initialState;
     default:

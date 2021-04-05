@@ -8,4 +8,5 @@ export interface Group extends NewGroup {
 
 export interface GroupWithWords extends Group {
   words: string[];
+  words_ids: number[];
 }

@@ -1,9 +1,4 @@
 export interface Word {
+  word_id: number;
   word: string;
-  book_id: number;
-  index: number;
-  offset: number;
-  sentence: number;
-  line: number;
-  paragraph: number;
 }

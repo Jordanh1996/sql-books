@@ -5,9 +5,8 @@ const connection = new Client({
   host: 'localhost',
   database: 'books',
   user: 'postgres',
-  password: 'mysecretpassword',
   port: 5432,
-  query_timeout: 5000,
+  query_timeout: 50000,
 });
 
 const p = connection.connect();
@@ -17,6 +16,8 @@ export const connect = async (): Promise<void> => {
     await p;
     try {
       await createTables();
+      const a = await connection.query('SELECT database_to_xml(true, true, \'n\')');
+      debugger;
     } catch (err) {
       console.error('Faild to sync tables', err);
       process.exit(2);

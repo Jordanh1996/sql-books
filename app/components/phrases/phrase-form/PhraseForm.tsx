@@ -9,8 +9,8 @@ import AddIcon from '@material-ui/icons/Add';
 import BackspaceRoundedIcon from '@material-ui/icons/BackspaceRounded';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { insertPhrase } from '../../../db/tables/phrase/queries/insert-phrase';
 import toastr from 'toastr';
+import { addPhrase } from '../../../db/utils/add-phrase';
 
 enum actions {
   PHRASE_CHANGE = 'PHRASE_CHANGE',
@@ -51,7 +51,7 @@ export const PhraseForm = ({ onAddPhrase = () => {} }: PhraseFormProps) => {
   const submit = useCallback(async () => {
     try {
       setLoading(true);
-      await insertPhrase(formState);
+      await addPhrase(formState);
       onAddPhrase();
       dispatch({ type: actions.CLEAR });
     } catch (e) {

@@ -8,10 +8,11 @@ const createTable = async (sqlPath: string): Promise<void> => {
 };
 
 export const createTables = async (): Promise<void> => {
-  await createTable(__dirname + '/book/book.sql');
   await createTable(__dirname + '/word/word.sql');
+  await createTable(__dirname + '/book/book.sql');
+  await createTable(__dirname + '/word-appearance/word-appearance.sql');
   await createTable(__dirname + '/group/group.sql');
-  await createTable(__dirname + '/group_word/group_word.sql');
+  await createTable(__dirname + '/group-word/group-word.sql');
   await createTable(__dirname + '/phrase/phrase.sql');
-  await createTable(__dirname + '/phrase_word/phrase_word.sql');
+  await createTable(__dirname + '/phrase-word/phrase-word.sql');
 };
