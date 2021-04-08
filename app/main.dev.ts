@@ -11,9 +11,10 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 import MenuBuilder from './menu';
 import { connect } from './db/connection';
+import { dialog } from 'electron';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -113,4 +114,19 @@ app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
+});
+
+ipcMain.on('get-export-path', async (event: IpcMainEvent) => {
+  const res = await dialog.showSaveDialog({ 
+    filters: [{ name: 'XML', extensions: ['xml'] }],
+    properties: ['createDirectory'],
+  });
+  event.sender.send('get-export-path', res);
+});
+
+ipcMain.on('get-import-path', async (event: IpcMainEvent) => {
+  const res = await dialog.showOpenDialog({ 
+    filters: [{ name: 'XML', extensions: ['xml'] }],
+  });
+  event.sender.send('get-import-path', res);
 });

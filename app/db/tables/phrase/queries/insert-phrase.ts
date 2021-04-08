@@ -13,3 +13,18 @@ export const insertPhrase = async (
 
   return rows[0].phrase_id;
 };
+
+export const insertPhrases = async (phrases: Phrase[]) => {
+  let offset = 1;
+  const valuesTemplate = phrases.map(
+    () => ` ($${offset++}, $${offset++})`
+  );
+  const values = phrases.map(({ phrase_id, word_count }) => [phrase_id, word_count]).flat();
+
+  await connection.query(
+    `INSERT INTO phrase
+    (phrase_id, word_count)
+    VALUES${valuesTemplate}`,
+    values
+  );
+};

@@ -16,8 +16,6 @@ export const connect = async (): Promise<void> => {
     await p;
     try {
       await createTables();
-      const a = await connection.query('SELECT database_to_xml(true, true, \'n\')');
-      debugger;
     } catch (err) {
       console.error('Faild to sync tables', err);
       process.exit(2);

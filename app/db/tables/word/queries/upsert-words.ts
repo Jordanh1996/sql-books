@@ -1,4 +1,3 @@
-
 import { connection } from '../../../connection';
 
 export const upsertWords = async (words: string[]): Promise<void> => {

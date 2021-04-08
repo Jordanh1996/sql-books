@@ -1,4 +1,4 @@
-import { NewBook } from '../book.interface';
+import { Book, NewBook } from '../book.interface';
 import { connection } from '../../../connection';
 
 export const insertBooks = async (
@@ -20,8 +20,38 @@ export const insertBooks = async (
   );
 
   const res = await connection.query(
-    `INSERT INTO book (title, author, file_path, release_date)
+    `INSERT INTO book
+    (title, author, file_path, release_date)
     VALUES${valuesTemplate} RETURNING book_id`,
+    values
+  );
+
+  return res.rows;
+};
+
+export const insertBooksWithIds = async (
+  books: Book[]
+) => {
+  let offset = 1;
+  const valuesTemplate = books.map(
+    () => ` ($${offset++}, $${offset++}, $${offset++}, $${offset++}, $${offset++})`
+  );
+  const values = books.reduce(
+    (acc, { book_id, title, author, file_path, release_date }) => [
+      ...acc,
+      book_id,
+      title,
+      author,
+      file_path,
+      release_date,
+    ],
+    []
+  );
+
+  const res = await connection.query(
+    `INSERT INTO book
+    (book_id, title, author, file_path, release_date)
+    VALUES${valuesTemplate}`,
     values
   );
 

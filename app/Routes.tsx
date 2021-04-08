@@ -3,13 +3,13 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import routes from './constants/routes.json';
 import App from './containers/App';
-import HomePage from './containers/HomePage';
 import { TopBar } from './components/TopBar';
 import { BooksPage } from './containers/BooksPage/BooksPage';
 import { GroupsPage } from './containers/GroupsPage/GroupsPage';
 import { WordsPage } from './containers/WordsPage/WordsPage';
 import { PhrasesPage } from './containers/PhrasesPage/PhrasesPage';
 import { StatisticsPage } from './containers/StatisticsPage/StatisticsPage';
+import { ImportExportPage } from './containers/ImportExportPage/ImportExportPage';
 
 const structuedPage = (Component: () => JSX.Element) => {
   return () => (
@@ -33,7 +33,7 @@ export default function Routes() {
         />
         <Route
           path={routes.IMPORT_EXPORT}
-          component={structuedPage(HomePage)}
+          component={structuedPage(ImportExportPage)}
         />
         <Route path={routes.BOOKS} component={structuedPage(BooksPage)} />
       </Switch>

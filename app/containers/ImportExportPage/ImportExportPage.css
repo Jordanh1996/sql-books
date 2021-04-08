@@ -1,0 +1,28 @@
+.submitProgress {
+  position: absolute;
+  align-self: center;
+  justify-content: center;
+}
+
+.importExportBoxContainer {
+  margin: 40px auto;
+  height: 300px;
+  width: 600px;
+}
+
+.title {
+  margin-top: 20px;
+}
+
+.buttonsContainer {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button {
+  width: 300px;
+  height: 46px;
+  margin-top: 36px !important;
+}

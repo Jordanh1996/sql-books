@@ -1,5 +1,6 @@
 import { connection } from '../../../connection';
 import { Word } from '../../word/word.interface';
+import { GroupWord } from '../group-word.interface';
 
 export const insertGroupWords = async (
   groupId: number,
@@ -15,3 +16,15 @@ export const insertGroupWords = async (
     values
   );
 };
+
+export const insertGroupsWords = async (groupsWords: GroupWord[]) => {
+  let offset = 1;
+  const valuesTemplate = groupsWords.map(() => ` ($${offset++}, $${offset++})`);
+  const values = groupsWords.map(({ group_id, word_id }) => [group_id, word_id]).flat();
+
+  await connection.query(
+    `INSERT INTO group_word (group_id, word_id)
+      VALUES${valuesTemplate};`,
+    values
+  );
+}

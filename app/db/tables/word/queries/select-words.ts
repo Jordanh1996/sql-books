@@ -1,4 +1,3 @@
-
 import { connection } from '../../../connection';
 import { Word } from '../word.interface';
 
