@@ -107,7 +107,7 @@ export const importDB = async (path = __dirname + '/db.xml') => {
     await importBooks(tree);
     await importGroups(tree);
     await importPhrases(tree);
-
+    await updateSerialIds();
     await connection.query('COMMIT');
   } catch(err) {
     await connection.query('ROLLBACK');
@@ -238,6 +238,17 @@ const importPhrases = async (tree: XMLTree) => {
     }))
   );
   await insertPhrasesWords(phrasesWords);
+};
+
+const updateSerialIds = async () => {
+  await updateTableSerialId('word', 'word_id');
+  await updateTableSerialId('book', 'book_id');
+  await updateTableSerialId('group', 'group_id');
+  await updateTableSerialId('phrase', 'phrase_id');
+};
+
+const updateTableSerialId = async (tableName: string, columnName: string) => {
+  await connection.query(`SELECT setval(pg_get_serial_sequence('${tableName}', '${columnName}'), coalesce(max(${columnName})+1, 1), false) FROM "${tableName}";`);
 };
 
 const CHUNK_SIZE = 500;

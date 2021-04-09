@@ -7,7 +7,7 @@
 }
 
 .actionsRow {
-  padding-top: 30px;
+  padding-top: 10px;
 }
 
 .button {
@@ -15,6 +15,6 @@
 }
 
 .input {
-  margin: 20px 0;
+  margin: 20px 8px !important;
   width: 300px;
 }

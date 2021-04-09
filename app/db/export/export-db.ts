@@ -50,10 +50,9 @@ const exportWords = async (stream: WriteStream) => {
 
 const exportBooks = async (stream: WriteStream) => {
   stream.write('<books>');
-  const bookCursor = connection.query(new Cursor(`SELECT * FROM book`));
+  const { rows: books } = await connection.query<Book>(`SELECT * FROM book`);
  
-  let book: Book;
-  while (([book] = await bookCursor.readAsync(BATCH_SIZE)) && book) {
+  for (const book of books) {
     stream.write(`<book id="${book.book_id}">`);
     stream.write(`<title>${book.title}</title>`);
     stream.write(`<author>${book.author}</author>`);
@@ -76,7 +75,6 @@ const exportBooks = async (stream: WriteStream) => {
   }
 
   stream.write('</books>');
-  bookCursor.close();
 };
 
 export const exportGroups = async (stream: WriteStream) => {

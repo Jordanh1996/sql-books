@@ -19,7 +19,8 @@ const createWordsAppearanceCondition = (words: string[]): string => {
   return `
     book_id IN (
       SELECT book_id
-      FROM word
+      FROM word_appearance
+      NATURAL JOIN word
       WHERE word IN (${words.map((word) => `'${word}'`).join(', ')})
       GROUP BY book_id
       HAVING count(DISTINCT word) = ${words.length}

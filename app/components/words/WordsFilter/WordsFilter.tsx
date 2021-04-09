@@ -29,6 +29,9 @@ enum actions {
   CHANGE_BOOKS = 'CHANGE_BOOKS',
   CHANGE_GROUPS = 'CHANGE_GROUPS',
   CHANGE_LINE = 'CHANGE_LINE',
+  CHANGE_PARAGRAPH = 'CHANGE_PARAGRAPH',
+  CHANGE_SENTENCE = 'CHANGE_SENTENCE',
+  CHANGE_OFFSET = 'CHANGE_OFFSET',
   CLEAR = 'CLEAR',
 }
 
@@ -36,18 +39,27 @@ export interface Filter {
   books: number[];
   groups: number[];
   line: string;
+  paragraph: string;
+  sentence: string;
+  offset: string;
 }
 
 type Action =
   | { type: actions.CHANGE_BOOKS; payload: number[] }
   | { type: actions.CHANGE_GROUPS; payload: number[] }
   | { type: actions.CHANGE_LINE; payload: string }
+  | { type: actions.CHANGE_PARAGRAPH; payload: string; }
+  | { type: actions.CHANGE_SENTENCE; payload: string; }
+  | { type: actions.CHANGE_OFFSET; payload: string; }
   | { type: actions.CLEAR };
 
 const initialState = {
   books: [],
   groups: [],
   line: '',
+  paragraph: '',
+  sentence: '',
+  offset: ''
 };
 
 const reducer = (state: Filter, action: Action): Filter => {
@@ -58,6 +70,12 @@ const reducer = (state: Filter, action: Action): Filter => {
       return { ...state, groups: action.payload };
     case actions.CHANGE_LINE:
       return { ...state, line: action.payload };
+    case actions.CHANGE_PARAGRAPH:
+      return { ...state, paragraph: action.payload };
+    case actions.CHANGE_SENTENCE:
+      return { ...state, sentence: action.payload };
+    case actions.CHANGE_OFFSET:
+      return { ...state, offset: action.payload };
     case actions.CLEAR:
       return initialState;
     default:
@@ -77,6 +95,7 @@ export const WordsFilter = ({
       <Paper className={clsx('column', styles.container)}>
         <div className="row justify-evenly">
           <div className="column">
+
             <FormControl variant="outlined" className={styles.input}>
               <InputLabel>Books</InputLabel>
               <Select
@@ -111,7 +130,7 @@ export const WordsFilter = ({
               </Select>
             </FormControl>
 
-            <FormControl variant="outlined">
+            <FormControl variant="outlined" className={styles.input}>
               <InputLabel>Groups</InputLabel>
               <Select
                 multiple
@@ -145,6 +164,7 @@ export const WordsFilter = ({
               </Select>
             </FormControl>
           </div>
+
           <div className="column">
             <FormControl variant="outlined" className={styles.input}>
               <InputLabel>Line</InputLabel>
@@ -159,8 +179,52 @@ export const WordsFilter = ({
                 labelWidth={34}
               />
             </FormControl>
+
+            <FormControl variant="outlined" className={styles.input}>
+              <InputLabel>Paragraph</InputLabel>
+              <OutlinedInput
+                value={formState.paragraph}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  dispatch({
+                    type: actions.CHANGE_PARAGRAPH,
+                    payload: e.target.value.replace(/[^0-9]/g, ''),
+                  })
+                }
+                labelWidth={34}
+              />
+            </FormControl>
           </div>
-        </div>
+          
+          <div className="column">
+            <FormControl variant="outlined" className={styles.input}>
+              <InputLabel>Sentence</InputLabel>
+              <OutlinedInput
+                value={formState.sentence}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  dispatch({
+                    type: actions.CHANGE_SENTENCE,
+                    payload: e.target.value.replace(/[^0-9]/g, ''),
+                  })
+                }
+                labelWidth={34}
+              />
+            </FormControl>
+
+            <FormControl variant="outlined" className={styles.input}>
+              <InputLabel>Offset</InputLabel>
+              <OutlinedInput
+                value={formState.offset}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  dispatch({
+                    type: actions.CHANGE_OFFSET,
+                    payload: e.target.value.replace(/[^0-9]/g, ''),
+                  })
+                }
+                labelWidth={34}
+              />
+            </FormControl>
+            </div>
+          </div>
 
         <div className={clsx('row', styles.actionsRow)}>
           <Button

@@ -32,6 +32,9 @@ export const WordsPage = () => {
     if (filter.books.length) params.books = filter.books;
     if (filter.groups.length) params.groups = filter.groups;
     if (filter.line) params.line = Number(filter.line);
+    if (filter.paragraph) params.paragraph = Number(filter.paragraph);
+    if (filter.sentence) params.sentence = Number(filter.sentence);
+    if (filter.offset) params.offset = Number(filter.offset);
 
     setLastFilter(filter);
     const words = await selectWordsCount(params);
@@ -69,6 +72,13 @@ export const WordsPage = () => {
         options.groups = lastFilter.groups;
       if (lastFilter?.line)
         options.line = Number(lastFilter.line);
+      if (lastFilter?.paragraph)
+        options.paragraph = Number(lastFilter.paragraph);
+      if (lastFilter?.sentence)
+        options.sentence = Number(lastFilter.sentence);
+      if (lastFilter?.offset)
+        options.offset = Number(lastFilter.offset);
+      
 
       setWordAppearances(
         await selectWordsAppearances({ words: selectedWords, options })

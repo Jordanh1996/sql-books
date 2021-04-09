@@ -4,6 +4,9 @@ export interface SelectWordsOptions {
   books?: number[];
   groups?: number[];
   line?: number;
+  paragraph?: number;
+  sentence?: number;
+  offset?: number;
 }
 
 export interface SelectWordsAppearancesOptions {
@@ -38,6 +41,9 @@ export const selectWordsCount = async ({
   books,
   groups,
   line,
+  paragraph,
+  sentence,
+  offset,
 }: SelectWordsOptions): Promise<WordCount[]> => {
   const conditions = [];
   if (books) {
@@ -57,6 +63,12 @@ export const selectWordsCount = async ({
     conditions.push(`group_id IN (${groups.join(', ')})`);
   if (typeof line === 'number')
     conditions.push(`line = ${line}`);
+  if (typeof paragraph === 'number')
+    conditions.push(`paragraph = ${paragraph}`);
+  if (typeof sentence === 'number')
+    conditions.push(`sentence = ${sentence}`);
+  if (typeof offset === 'number')
+    conditions.push(`offset = ${offset}`);
 
   if (conditions.length)
     queryString = [queryString, conditions.join(' AND ')].join(' WHERE ');
@@ -70,7 +82,7 @@ export const selectWordsCount = async ({
 
 export const selectWordsAppearances = async ({
   words,
-  options: { books, groups, line },
+  options: { books, groups, line, paragraph, sentence, offset },
 }: SelectWordsAppearancesOptions): Promise<WordAppearance[]> => {
   const conditions = [];
   if (books) {
@@ -88,6 +100,12 @@ export const selectWordsAppearances = async ({
     conditions.push(`group_id IN (${groups.join(', ')})`);
   if (typeof line === 'number')
     conditions.push(`line = ${line}`);
+  if (typeof paragraph === 'number')
+    conditions.push(`paragraph = ${paragraph}`);
+  if (typeof sentence === 'number')
+    conditions.push(`sentence = ${sentence}`);
+  if (typeof offset === 'number')
+    conditions.push(`offset = ${offset}`);
 
   conditions.push(`word IN (${words.map((word) => `'${word}'`).join(', ')})`);
 
