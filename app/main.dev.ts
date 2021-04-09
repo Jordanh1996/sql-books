@@ -15,6 +15,7 @@ import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 import MenuBuilder from './menu';
 import { connect } from './db/connection';
 import { dialog } from 'electron';
+import { registerQueryHandlers } from './db/queries';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -50,6 +51,7 @@ const createWindow = async () => {
 
   // connects to database and sync tables
   await connect();
+  registerQueryHandlers();
 
   mainWindow = new BrowserWindow({
     show: false,

@@ -10,7 +10,7 @@ import BackspaceRoundedIcon from '@material-ui/icons/BackspaceRounded';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import toastr from 'toastr';
-import { addPhrase } from '../../../db/utils/add-phrase';
+import { queries } from '../../../db/queries';
 
 enum actions {
   PHRASE_CHANGE = 'PHRASE_CHANGE',
@@ -51,7 +51,7 @@ export const PhraseForm = ({ onAddPhrase = () => {} }: PhraseFormProps) => {
   const submit = useCallback(async () => {
     try {
       setLoading(true);
-      await addPhrase(formState);
+      await queries.addPhrase(formState);
       onAddPhrase();
       dispatch({ type: actions.CLEAR });
     } catch (e) {

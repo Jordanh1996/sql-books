@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './GeneralStatistics.css';
 import { BoxList } from '../../common/BoxList';
-import { countTable } from '../../../db/utils/count-table';
-import { avgTable } from '../../../db/utils/avg-table';
+import { queries } from '../../../db/queries';
 import { displayDecimal } from '../../../utils/math/afterDotNum';
 
 export const GeneralStatistics = () => {
@@ -14,12 +13,12 @@ export const GeneralStatistics = () => {
   const [wordAvg, setWordAvg] = useState<string | number>('Loading...');
 
   const getGeneralStatistics = useCallback(async () => {
-    countTable('book').then(setBooksCount);
-    countTable('group').then(setGroupCount);
-    countTable('phrase').then(setPhraseCount);
-    avgTable('group_word', 'group_id').then(setGroupAvg);
-    avgTable('phrase_word', 'phrase_id').then(setPhraseAvg);
-    avgTable('word_appearance', 'book_id').then(setWordAvg);
+    queries.countTable('book').then(setBooksCount);
+    queries.countTable('group').then(setGroupCount);
+    queries.countTable('phrase').then(setPhraseCount);
+    queries.avgTable('group_word', 'group_id').then(setGroupAvg);
+    queries.avgTable('phrase_word', 'phrase_id').then(setPhraseAvg);
+    queries.avgTable('word_appearance', 'book_id').then(setWordAvg);
   }, []);
 
   useEffect(() => {

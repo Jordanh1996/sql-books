@@ -7,17 +7,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Book } from '../../../db/tables/book/book.interface';
-import { selectBooks } from '../../../db/tables/book/queries/select-books';
 import { BoxList } from '../../common/BoxList';
-import {
-  countWords,
-  countMaxColumn,
-  averageWords,
-  averageLetters,
-  sumLetters,
-} from '../../../db/tables/word-appearance/queries/select-words-appearances';
 import clsx from 'clsx';
 import { displayDecimal } from '../../../utils/math/afterDotNum';
+import { queries } from '../../../db/queries';
 
 interface BookStatisticsProps {}
 
@@ -58,7 +51,7 @@ export const BookStatistics = ({}: BookStatisticsProps) => {
   );
 
   const getBooks = useCallback(async () => {
-    const books = await selectBooks({});
+    const books = await queries.selectBooks({});
 
     setBooks(books);
   }, []);
@@ -68,22 +61,22 @@ export const BookStatistics = ({}: BookStatisticsProps) => {
   }, []);
 
   useEffect(() => {
-    countWords(selectedBooks).then(setWordCount);
-    countWords(selectedBooks, 'word').then(setDistinctWordCount);
-    sumLetters(selectedBooks).then(setLetterCount);
-    averageLetters(selectedBooks, 'offset').then(setLetterAvg);
+    queries.countWords(selectedBooks).then(setWordCount);
+    queries.countWords(selectedBooks, 'word').then(setDistinctWordCount);
+    queries.sumLetters(selectedBooks).then(setLetterCount);
+    queries.averageLetters(selectedBooks, 'offset').then(setLetterAvg);
 
-    countMaxColumn(selectedBooks, 'paragraph').then(setParagraphWordCount);
-    countMaxColumn(selectedBooks, 'sentence').then(setSentenceWordCount);
-    countMaxColumn(selectedBooks, 'line').then(setLineWordCount);
+    queries.countMaxColumn(selectedBooks, 'paragraph').then(setParagraphWordCount);
+    queries.countMaxColumn(selectedBooks, 'sentence').then(setSentenceWordCount);
+    queries.countMaxColumn(selectedBooks, 'line').then(setLineWordCount);
 
-    averageWords(selectedBooks, 'paragraph').then(setParagraphWordAvg);
-    averageWords(selectedBooks, 'sentence').then(setSentenceWordAvg);
-    averageWords(selectedBooks, 'line').then(setLineWordAvg);
+    queries.averageWords(selectedBooks, 'paragraph').then(setParagraphWordAvg);
+    queries.averageWords(selectedBooks, 'sentence').then(setSentenceWordAvg);
+    queries.averageWords(selectedBooks, 'line').then(setLineWordAvg);
 
-    averageLetters(selectedBooks, 'paragraph').then(setParagraphLetterAvg);
-    averageLetters(selectedBooks, 'sentence').then(setSentenceLetterAvg);
-    averageLetters(selectedBooks, 'line').then(setLineLetterAvg);
+    queries.averageLetters(selectedBooks, 'paragraph').then(setParagraphLetterAvg);
+    queries.averageLetters(selectedBooks, 'sentence').then(setSentenceLetterAvg);
+    queries.averageLetters(selectedBooks, 'line').then(setLineLetterAvg);
   }, [selectedBooks]);
 
   return (

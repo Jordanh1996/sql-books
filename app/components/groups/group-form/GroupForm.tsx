@@ -11,8 +11,8 @@ import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { WordList } from '../../word-list/WordList';
-import { addGroup } from '../../../db/utils/add-group';
 import styles from './GroupForm.css';
+import { queries } from '../../../db/queries';
 
 enum Actions {
   NAME_CHANGE = 'NAME_CHANGE',
@@ -76,7 +76,7 @@ export const GroupForm = ({ onAddGroup = () => {} }: GroupFormProps) => {
   const submit = useCallback(async () => {
     try {
       setLoading(true);
-      await addGroup(formState);
+      await queries.addGroup(formState);
       onAddGroup();
       dispatch({ type: Actions.CLEAR });
     } catch (e) {

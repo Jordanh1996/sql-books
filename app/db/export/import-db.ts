@@ -2,13 +2,7 @@ import { promises as fs } from 'fs';
 import { parseStringPromise } from 'xml2js';
 import _ from 'lodash';
 import { connection } from '../connection';
-import { insertBooksWithIds } from '../tables/book/queries/insert-books';
-import { insertGroupsWords } from '../tables/group-word/queries/insert-group-words';
-import { insertGroups } from '../tables/group/queries/insert-group';
-import { insertPhrasesWords } from '../tables/phrase-word/queries/insert-phrase-words';
-import { insertPhrases } from '../tables/phrase/queries/insert-phrase';
-import { insertWordsAppearances } from '../tables/word-appearance/queries/insert-words-appearances';
-import { insertWords } from '../tables/word/queries/insert-words';
+import { queries } from '../queries';
 
 interface XMLTree {
   book_db: {
@@ -125,7 +119,7 @@ const normalizeWords = (tree: XMLTree) => {
 const importWords = async (tree: XMLTree) => {
   const normalizedWords = normalizeWords(tree);
   
-  return withChunks(insertWords, normalizedWords);
+  return withChunks(queries.insertWords, normalizedWords);
 };
 
 const normalizeBooks = (tree: XMLTree) => {
@@ -173,8 +167,8 @@ const importBooks = async (tree: XMLTree) => {
     ];
   }, []);
 
-  await insertBooksWithIds(normalizedBooks);
-  await withChunks(insertWordsAppearances, wordsAppearances);
+  await queries.insertBooksWithIds(normalizedBooks);
+  await withChunks(queries.insertWordsAppearances, wordsAppearances);
 };
 
 const normalizeGroups = (tree: XMLTree) => {
@@ -200,8 +194,8 @@ const importGroups = async (tree: XMLTree) => {
     ];
   }, []);
 
-  await insertGroups(normalizedGroups);
-  await insertGroupsWords(groupsWords);
+  await queries.insertGroups(normalizedGroups);
+  await queries.insertGroupsWords(groupsWords);
 };
 
 const normalizePhrases = (tree: XMLTree) => {
@@ -231,13 +225,13 @@ const importPhrases = async (tree: XMLTree) => {
     ];
   }, []);
 
-  await insertPhrases(
+  await queries.insertPhrases(
     normalizedPhrases.map(({ phrase_id, phrase_words }) => ({
       phrase_id,
       word_count: phrase_words.length,
     }))
   );
-  await insertPhrasesWords(phrasesWords);
+  await queries.insertPhrasesWords(phrasesWords);
 };
 
 const CHUNK_SIZE = 500;

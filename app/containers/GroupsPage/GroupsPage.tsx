@@ -3,9 +3,8 @@ import clsx from 'clsx';
 import styles from './GroupsPage.css';
 import { GroupForm } from '../../components/groups/group-form/GroupForm';
 import { GroupWithWords } from '../../db/tables/group/group.interface';
-import { selectGroupsWithWords } from '../../db/tables/group/queries/select-groups';
-import { deleteGroup } from '../../db/tables/group/queries/delete-group';
 import { GroupList } from '../../components/groups/GroupList';
+import { queries } from '../../db/queries';
 
 export const GroupsPage = () => {
   const [groups, setGroups] = useState<GroupWithWords[]>([]);
@@ -16,7 +15,7 @@ export const GroupsPage = () => {
     async (options: any = {}) => {
       setLastFilter(options);
       setLoading(true);
-      const groups = await selectGroupsWithWords(options);
+      const groups = await queries.selectGroupsWithWords(options);
       setGroups(groups);
       setLoading(false);
     },
@@ -25,7 +24,7 @@ export const GroupsPage = () => {
 
   const removeGroup = useCallback(
     (group: GroupWithWords) => {
-      deleteGroup(group.group_id);
+      queries.deleteGroup(group.group_id);
       setGroups(groups.filter((cur) => cur.group_id !== group.group_id));
     },
     [setGroups, groups]

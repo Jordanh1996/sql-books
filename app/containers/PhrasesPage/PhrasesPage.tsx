@@ -3,15 +3,11 @@ import clsx from 'clsx';
 import styles from './PhrasesPage.css';
 import { PhraseList } from '../../components/phrases/phrase-list/PhraseList';
 import { Phrase, PhraseWithWords } from '../../db/tables/phrase/phrase.interface';
-import {
-  selectPhrases,
-  findPhrase,
-  PhraseMatch,
-} from '../../db/tables/phrase/queries/select-phrases';
-import { deletePhrase } from '../../db/tables/phrase/queries/delete-phrase';
 import { PhraseForm } from '../../components/phrases/phrase-form/PhraseForm';
 import { MatchTable } from '../../components/phrases/match-table/MatchTable';
 import { Filter } from '../../components/phrases/phrase-filter/PhraseFilter';
+import { queries } from '../../db/queries';
+import { PhraseMatch } from '../../db/tables/phrase/queries/select-phrases';
 
 export const PhrasesPage = () => {
   const [phrases, setPhrases] = useState<Phrase[]>([]);
@@ -20,7 +16,7 @@ export const PhrasesPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const onSearchClick = useCallback(async (phrase: PhraseWithWords) => {
-    const matches = await findPhrase(phrase.phrase_id);
+    const matches = await queries.findPhrase(phrase.phrase_id);
 
     setMatches(matches.map(match => ({ ...match, phrase: phrase.phrase })));
   }, []);
@@ -29,7 +25,7 @@ export const PhrasesPage = () => {
     async (options: Filter = { phrase: '' }) => {
       setLastFilter(options);
       setLoading(true);
-      let phrases = await selectPhrases();
+      let phrases = await queries.selectPhrases();
       if (options.phrase) {
         phrases = phrases.filter(phrase => phrase.phrase.includes(options.phrase));
       }
@@ -41,7 +37,7 @@ export const PhrasesPage = () => {
 
   const removePhrase = useCallback(
     (phrase: Phrase) => {
-      deletePhrase(phrase.phrase_id);
+      queries.deletePhrase(phrase.phrase_id);
       setPhrases(phrases.filter((cur) => cur.phrase_id !== phrase.phrase_id));
     },
     [setPhrases, phrases]

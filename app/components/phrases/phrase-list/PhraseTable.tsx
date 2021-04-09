@@ -4,7 +4,6 @@ import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import { Phrase } from '../../../db/tables/phrase/phrase.interface';
 import SearchIcon from '@material-ui/icons/Search';
 import { VirtualizedTable } from '../../common/VirtualizedTable';

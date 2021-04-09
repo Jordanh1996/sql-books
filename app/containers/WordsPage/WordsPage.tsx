@@ -2,22 +2,19 @@ import React, { useState, useCallback, useEffect } from 'react';
 import clsx from 'clsx';
 import styles from './WordsPage.css';
 import { Group } from '../../db/tables/group/group.interface';
-import { selectGroups } from '../../db/tables/group/queries/select-groups';
 import {
   WordsFilter,
   Filter,
 } from '../../components/words/WordsFilter/WordsFilter';
 import { Book } from '../../db/tables/book/book.interface';
-import { selectBooks } from '../../db/tables/book/queries/select-books';
 import { WordsBar } from '../../components/words/WordsBar/WordsBar';
 import {
-  selectWordsCount,
   SelectWordsOptions,
   WordCount,
   WordAppearance,
-  selectWordsAppearances,
 } from '../../db/tables/word-appearance/queries/select-words-appearances';
 import { WordTable } from '../../components/words/WordsTable/WordsTable';
+import { queries } from '../../db/queries';
 
 export const WordsPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -34,19 +31,19 @@ export const WordsPage = () => {
     if (filter.line) params.line = Number(filter.line);
 
     setLastFilter(filter);
-    const words = await selectWordsCount(params);
+    const words = await queries.selectWordsCount(params);
     setSelectedWords([]);
     setWordAppearances([]);
     setWords(words);
   }, []);
 
   const getGroups = useCallback(async () => {
-    const groups = await selectGroups();
+    const groups = await queries.selectGroups();
     setGroups(groups);
   }, [setGroups]);
 
   const getBooks = useCallback(async () => {
-    const books = await selectBooks({});
+    const books = await queries.selectBooks({});
     setBooks(books);
   }, [setBooks]);
 
@@ -71,7 +68,7 @@ export const WordsPage = () => {
         options.line = Number(lastFilter.line);
 
       setWordAppearances(
-        await selectWordsAppearances({ words: selectedWords, options })
+        await queries.selectWordsAppearances({ words: selectedWords, options })
       );
     })();
   }, [selectedWords]);
