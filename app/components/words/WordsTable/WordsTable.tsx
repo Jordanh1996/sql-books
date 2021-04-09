@@ -79,8 +79,16 @@ export const WordTable = ({ words }: WordTableProps) => {
               flexGrow: 2,
             },
             {
+              label: 'Paragraph',
+              dataKey: 'paragraph',
+            },
+            {
               label: 'Line',
               dataKey: 'line',
+            },
+            {
+              label: 'Sentence',
+              dataKey: 'sentence',
             },
             {
               label: 'Offset',

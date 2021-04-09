@@ -1,5 +1,5 @@
 import { WordAppearance } from '../word-appearance.interface';
-import { connection } from '../../../connection';
+import { getConnection } from '../../../connection';
 
 export const insertWordsAppearances = async (words: WordAppearance[]): Promise<void> => {
   let paramCount = 1;
@@ -21,7 +21,7 @@ export const insertWordsAppearances = async (words: WordAppearance[]): Promise<v
     []
   );
 
-  await connection.query(
+  await getConnection().query(
     `INSERT INTO word_appearance (word_id, book_id, index, "offset", sentence, line, paragraph)
     VALUES${valuesTemplate};`,
     values

@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 const tabs = [
   {
     label: 'Books',
-    route: '/',
+    route: '/books',
   },
   {
     label: 'Words',

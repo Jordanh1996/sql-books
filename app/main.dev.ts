@@ -11,7 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
+import { app, BrowserWindow, ipcMain, IpcMainEvent, IpcMainInvokeEvent } from 'electron';
 import MenuBuilder from './menu';
 import { connect } from './db/connection';
 import { dialog } from 'electron';
@@ -50,7 +50,7 @@ const createWindow = async () => {
   }
 
   // connects to database and sync tables
-  await connect();
+  // await connect();
   registerQueryHandlers();
 
   mainWindow = new BrowserWindow({
@@ -132,6 +132,10 @@ ipcMain.on('get-import-path', async (event: IpcMainEvent) => {
     filters: [{ name: 'XML', extensions: ['xml'] }],
   });
   event.sender.send('get-import-path', res);
+});
+
+ipcMain.handle('sign-in', async (event: IpcMainInvokeEvent, username: string, password?: string) => {
+  return await connect(username, password);
 });
 
 class Windows {

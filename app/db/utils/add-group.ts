@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { connection } from '../connection';
+import { getConnection } from '../connection';
 import { insertGroup } from '../tables/group/queries/insert-group';
 import { insertGroupWords } from '../tables/group-word/queries/insert-group-words';
 import { selectWords } from '../tables/word/queries/select-words';
@@ -17,7 +17,7 @@ export const addGroup = async ({
   if (!wordsStrings.length) return;
 
   try {
-    await connection.query('BEGIN');
+    await getConnection().query('BEGIN');
 
     // INSERT the group
     const group_id = await insertGroup({ name });
@@ -36,9 +36,9 @@ export const addGroup = async ({
       wordsStrings.map(word => words[word].word_id)
     );
 
-    await connection.query('COMMIT');
+    await getConnection().query('COMMIT');
   } catch (e) {
-    await connection.query('ROLLBACK');
+    await getConnection().query('ROLLBACK');
     throw e;
   }
 };

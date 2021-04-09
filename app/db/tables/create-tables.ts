@@ -1,11 +1,11 @@
 import path from 'path';
 import { promises as fs } from 'fs';
-import { connection } from '../connection';
+import { getConnection } from '../connection';
 
 const createTable = async (sqlPath: string): Promise<void> => {
   const sql = await fs.readFile(sqlPath, 'utf8');
 
-  await connection.query(sql);
+  await getConnection().query(sql);
 };
 
 export const createTables = async (): Promise<void> => {

@@ -1,7 +1,7 @@
-import { connection } from '../connection';
+import { getConnection } from '../connection';
 
 export const countTable = async (tableName: string): Promise<number> => {
-  const res = await connection.query(
+  const res = await getConnection().query(
     `SELECT COUNT(*) AS count FROM "${tableName}"`
   );
 

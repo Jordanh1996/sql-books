@@ -1,5 +1,6 @@
 {
-  "BOOKS": "/",
+  "SIGN_IN": "/",
+  "BOOKS": "/books",
   "WORDS": "/words",
   "GROUPS": "/groups",
   "PHRASES": "/phrases",

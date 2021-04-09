@@ -1,5 +1,5 @@
 import { GroupWithWords, Group } from '../group.interface';
-import { connection } from '../../../connection';
+import { getConnection } from '../../../connection';
 
 export interface SelectGroupOptions {
   name: string;
@@ -9,7 +9,7 @@ export interface SelectGroupOptions {
 export const selectGroupsWithWords = async (
   options: SelectGroupOptions
 ): Promise<GroupWithWords[]> => {
-  const { rows } = await connection.query<{ word: string; word_id: number; group_id: number; name: string; }>(
+  const { rows } = await getConnection().query<{ word: string; word_id: number; group_id: number; name: string; }>(
     `SELECT g.group_id as group_id, name, gw.word_id AS word_id, w.word AS word
     FROM "group" g
     LEFT JOIN group_word gw ON g.group_id = gw.group_id
@@ -33,7 +33,7 @@ export const selectGroupsWithWords = async (
 };
 
 export const selectGroups = async (): Promise<Group[]> => {
-  const res = await connection.query(`SELECT * FROM "group"`);
+  const res = await getConnection().query(`SELECT * FROM "group"`);
 
   return res.rows;
 };

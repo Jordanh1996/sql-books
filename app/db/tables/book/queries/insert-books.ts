@@ -1,5 +1,5 @@
 import { Book, NewBook } from '../book.interface';
-import { connection } from '../../../connection';
+import { getConnection } from '../../../connection';
 
 export const insertBooks = async (
   books: NewBook[]
@@ -19,7 +19,7 @@ export const insertBooks = async (
     []
   );
 
-  const res = await connection.query(
+  const res = await getConnection().query(
     `INSERT INTO book
     (title, author, file_path, release_date)
     VALUES${valuesTemplate} RETURNING book_id`,
@@ -48,7 +48,7 @@ export const insertBooksWithIds = async (
     []
   );
 
-  const res = await connection.query(
+  const res = await getConnection().query(
     `INSERT INTO book
     (book_id, title, author, file_path, release_date)
     VALUES${valuesTemplate}`,

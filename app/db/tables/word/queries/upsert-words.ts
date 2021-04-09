@@ -1,4 +1,4 @@
-import { connection } from '../../../connection';
+import { getConnection } from '../../../connection';
 
 export const upsertWords = async (words: string[]): Promise<void> => {
   let paramCount = 1;
@@ -6,7 +6,7 @@ export const upsertWords = async (words: string[]): Promise<void> => {
     () => ` ($${paramCount++})`
   );
 
-  await connection.query(
+  await getConnection().query(
     `INSERT INTO word (word)
     VALUES${valuesTemplate}
     ON CONFLICT DO NOTHING;`,

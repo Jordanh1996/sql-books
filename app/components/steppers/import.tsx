@@ -71,13 +71,11 @@ export const ImportStepper = ({
 
   useEffect(() => {
     const startHandler = () => {
-      console.log('start');
       dispatch({ type: Actions.CLEAR });
     };
     ipcRenderer.on('import:start', startHandler);
 
     const progressHandler = (e: IpcRendererEvent, step: Step) => {
-      console.log(e, step);
       dispatch({ type: Actions.PROGRESS, payload: step });
     }
     ipcRenderer.on('import:progress', progressHandler);

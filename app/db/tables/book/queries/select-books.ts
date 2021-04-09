@@ -1,5 +1,5 @@
 import { Book } from '../book.interface';
-import { connection } from '../../../connection';
+import { getConnection } from '../../../connection';
 
 export interface SelectBooksOptions {
   title?: string;
@@ -43,7 +43,7 @@ export const selectBooks = async (
     queryString = [queryString, conditions.join(' AND ')].join(' WHERE ');
   }
 
-  const res = await connection.query(queryString);
+  const res = await getConnection().query(queryString);
 
   return res.rows;
 };

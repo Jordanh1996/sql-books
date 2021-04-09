@@ -4,7 +4,7 @@ import Cursor from 'pg-cursor';
 import { promisify } from 'util';
 import moment from 'moment';
 import _ from 'lodash';
-import { connection } from '../connection';
+import { getConnection } from '../connection';
 import { Word } from '../tables/word/word.interface';
 import { Book } from '../tables/book/book.interface';
 import { WordAppearance } from '../tables/word-appearance/word-appearance.interface';
@@ -34,7 +34,7 @@ export const exportDB = async (path = __dirname + '/db.xml') => {
 
 const exportWords = async (stream: WriteStream) => {
   stream.write('<words>');
-  const cursor = connection.query(new Cursor(`SELECT * FROM word`));
+  const cursor = getConnection().query(new Cursor(`SELECT * FROM word`));
 
   let rows: Word[];
   while ((rows = await cursor.readAsync(BATCH_SIZE)) && rows.length) {
@@ -50,7 +50,7 @@ const exportWords = async (stream: WriteStream) => {
 
 const exportBooks = async (stream: WriteStream) => {
   stream.write('<books>');
-  const { rows: books } = await connection.query<Book>(`SELECT * FROM book`);
+  const { rows: books } = await getConnection().query<Book>(`SELECT * FROM book`);
  
   for (const book of books) {
     stream.write(`<book id="${book.book_id}">`);
@@ -59,7 +59,7 @@ const exportBooks = async (stream: WriteStream) => {
     stream.write(`<file_path>${book.file_path}</file_path>`);
     stream.write(`<release_date>${moment(book.release_date).format('YYYY-MM-DD')}</release_date>`);
     stream.write('<content>')
-    const { rows: words } = await connection.query<WordAppearance>(`SELECT * FROM word_appearance WHERE book_id = $1`, [book.book_id]);
+    const { rows: words } = await getConnection().query<WordAppearance>(`SELECT * FROM word_appearance WHERE book_id = $1`, [book.book_id]);
     for (const word of words) {
       stream.write('<word_appearance>');
       stream.write(`<word refid="${word.word_id}"></word>`);
@@ -79,7 +79,7 @@ const exportBooks = async (stream: WriteStream) => {
 
 export const exportGroups = async (stream: WriteStream) => {
   stream.write('<groups>');
-  const { rows: groups } = await connection.query<Group & GroupWord>(`SELECT * FROM "group" NATURAL JOIN group_word`);
+  const { rows: groups } = await getConnection().query<Group & GroupWord>(`SELECT * FROM "group" NATURAL JOIN group_word`);
 
   const groupsMap = _.groupBy(groups, 'group_id');
 
@@ -99,7 +99,7 @@ export const exportGroups = async (stream: WriteStream) => {
 
 export const exportPhrases = async (stream: WriteStream) => {
   stream.write('<phrases>');
-  const { rows: phrases } = await connection.query<Phrase & PhraseWord>(`SELECT * FROM phrase NATURAL JOIN phrase_word`);
+  const { rows: phrases } = await getConnection().query<Phrase & PhraseWord>(`SELECT * FROM phrase NATURAL JOIN phrase_word`);
 
   const phrasesMap = _.groupBy(phrases, 'phrase_id');
 

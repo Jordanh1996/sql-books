@@ -10,6 +10,7 @@ import { WordsPage } from './containers/WordsPage/WordsPage';
 import { PhrasesPage } from './containers/PhrasesPage/PhrasesPage';
 import { StatisticsPage } from './containers/StatisticsPage/StatisticsPage';
 import { ImportExportPage } from './containers/ImportExportPage/ImportExportPage';
+import { SignIn } from './containers/Login/Login';
 
 const structuedPage = (Component: () => JSX.Element) => {
   return () => (
@@ -36,6 +37,7 @@ export default function Routes() {
           component={structuedPage(ImportExportPage)}
         />
         <Route path={routes.BOOKS} component={structuedPage(BooksPage)} />
+        <Route path={routes.SIGN_IN} component={SignIn} />
       </Switch>
     </App>
   );

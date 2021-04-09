@@ -1,4 +1,4 @@
-import { connection } from '../../../connection';
+import { getConnection } from '../../../connection';
 
 export interface SelectWordsOptions {
   books?: number[];
@@ -68,14 +68,14 @@ export const selectWordsCount = async ({
   if (typeof sentence === 'number')
     conditions.push(`sentence = ${sentence}`);
   if (typeof offset === 'number')
-    conditions.push(`offset = ${offset}`);
+    conditions.push(`"offset" = ${offset}`);
 
   if (conditions.length)
     queryString = [queryString, conditions.join(' AND ')].join(' WHERE ');
 
   queryString += ' GROUP BY word';
 
-  const res = await connection.query(queryString);
+  const res = await getConnection().query(queryString);
 
   return res.rows.map((row) => ({ ...row, count: parseInt(row.count) }));
 };
@@ -90,7 +90,7 @@ export const selectWordsAppearances = async ({
   }
 
   let queryString =
-    `SELECT word, line, "offset", file_path, title 
+    `SELECT word, line, "offset", file_path, title, paragraph, sentence
     FROM word_appearance 
     NATURAL JOIN book
     NATURAL JOIN word
@@ -105,13 +105,13 @@ export const selectWordsAppearances = async ({
   if (typeof sentence === 'number')
     conditions.push(`sentence = ${sentence}`);
   if (typeof offset === 'number')
-    conditions.push(`offset = ${offset}`);
+    conditions.push(`"offset" = ${offset}`);
 
   conditions.push(`word IN (${words.map((word) => `'${word}'`).join(', ')})`);
 
   queryString = [queryString, conditions.join(' AND ')].join(' WHERE ');
 
-  return (await connection.query(queryString)).rows;
+  return (await getConnection().query(queryString)).rows;
 };
 
 export const countWords = async (books: number[], distinct?: string) => {
@@ -123,7 +123,7 @@ export const countWords = async (books: number[], distinct?: string) => {
     queryString += ` WHERE book_id IN (${books.join(', ')})`;
   }
 
-  const res = await connection.query(queryString);
+  const res = await getConnection().query(queryString);
 
   return res.rows[0].count;
 };
@@ -132,7 +132,7 @@ export const countMaxColumn = async (
   books: number[],
   columnName: string
 ): Promise<number> => {
-  const res = await connection.query(`
+  const res = await getConnection().query(`
     SELECT SUM(max) FROM (
       SELECT MAX("${columnName}")
       FROM word_appearance wa
@@ -149,7 +149,7 @@ export const averageWords = async (
   books: number[],
   groupBy: string
 ): Promise<string | number> => {
-  const res = await connection.query(`
+  const res = await getConnection().query(`
     SELECT AVG(count) FROM (
       SELECT COUNT(*)
       FROM word_appearance wa
@@ -166,7 +166,7 @@ export const averageLetters = async (
   books: number[],
   groupBy?: string
 ): Promise<string | number> => {
-  const res = await connection.query(`
+  const res = await getConnection().query(`
     SELECT AVG(sum) FROM (
       SELECT SUM(LENGTH(w.word))
       FROM word_appearance wa
@@ -180,7 +180,7 @@ export const averageLetters = async (
 };
 
 export const sumLetters = async (books: number[]): Promise<number> => {
-  const res = await connection.query(
+  const res = await getConnection().query(
     `SELECT SUM(LENGTH(w.word)) 
     FROM word_appearance wa
     JOIN word w ON w.word_id = wa.word_id

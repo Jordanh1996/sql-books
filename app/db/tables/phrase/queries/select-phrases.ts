@@ -1,8 +1,8 @@
-import { connection } from '../../../connection';
+import { getConnection } from '../../../connection';
 import { Phrase, PhraseWithWords } from '../phrase.interface';
 
 export const selectPhrases = async (): Promise<PhraseWithWords[]> => {
-  const { rows } = await connection.query<Phrase & { word: string; word_index: number }>(
+  const { rows } = await getConnection().query<Phrase & { word: string; word_index: number }>(
     `SELECT 
       phrase.phrase_id AS phrase_id,
       word_count,
@@ -47,7 +47,7 @@ export interface PhraseMatch {
 }
 
 export const findPhrase = async (phrase_id: number): Promise<PhraseMatch[]> => {
-  const res = await connection.query(`
+  const res = await getConnection().query(`
     SELECT phrase_id, book_id, title, author, paragraph, sentence, file_path, MIN("offset") AS start_offset, MAX(end_offset) AS end_offset FROM (
       SELECT
         book.book_id AS book_id, 

@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import { parseStringPromise } from 'xml2js';
 import _ from 'lodash';
-import { connection } from '../connection';
+import { getConnection } from '../connection';
 import { queries } from '../queries';
 import { BrowserWindow } from 'electron';
 
@@ -102,7 +102,7 @@ export const importDB = async (path = __dirname + '/db.xml') => {
   window.webContents.send('import:progress', { step: 0, progress: 60 });
 
   try {
-    await connection.query('BEGIN');
+    await getConnection().query('BEGIN');
 
     await queries.dropTables();
     window.webContents.send('import:progress', { step: 0, progress: 80 });
@@ -117,9 +117,9 @@ export const importDB = async (path = __dirname + '/db.xml') => {
     await importPhrases(tree);
     window.webContents.send('import:progress', { step: 4, progress: 100 });
     await updateSerialIds();
-    await connection.query('COMMIT');
+    await getConnection().query('COMMIT');
   } catch(err) {
-    await connection.query('ROLLBACK');
+    await getConnection().query('ROLLBACK');
     throw err;
   }
 };
@@ -260,7 +260,7 @@ const updateSerialIds = async () => {
 };
 
 const updateTableSerialId = async (tableName: string, columnName: string) => {
-  await connection.query(`SELECT setval(pg_get_serial_sequence('${tableName}', '${columnName}'), coalesce(max(${columnName})+1, 1), false) FROM "${tableName}";`);
+  await getConnection().query(`SELECT setval(pg_get_serial_sequence('${tableName}', '${columnName}'), coalesce(max(${columnName})+1, 1), false) FROM "${tableName}";`);
 };
 
 const CHUNK_SIZE = 500;

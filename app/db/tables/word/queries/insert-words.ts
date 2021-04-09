@@ -1,4 +1,4 @@
-import { connection } from '../../../connection';
+import { getConnection } from '../../../connection';
 import { Word } from '../word.interface';
 
 export const insertWords = async (words: Word[]): Promise<void> => {
@@ -7,7 +7,7 @@ export const insertWords = async (words: Word[]): Promise<void> => {
     () => ` ($${paramCount++}, $${paramCount++})`
   );
 
-  await connection.query(
+  await getConnection().query(
     `INSERT INTO word (word_id, word)
     VALUES${valuesTemplate};`,
     words.map(({ word_id, word }) => [word_id, word]).flat()

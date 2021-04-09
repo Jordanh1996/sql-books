@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import _ from 'lodash';
-import { connection } from '../connection';
+import { getConnection } from '../connection';
 import { NewBook } from '../tables/book/book.interface';
 import { insertBooks } from '../tables/book/queries/insert-books';
 import { insertWordsAppearances } from '../tables/word-appearance/queries/insert-words-appearances';
@@ -14,7 +14,7 @@ export const addBook = async (book: NewBook): Promise<number> => {
   const content = await fs.readFile(book.file_path, 'utf8');
 
   try {
-    await connection.query('BEGIN');
+    await getConnection().query('BEGIN');
     // INSERT to book
     const [{ book_id }] = await insertBooks([book]);
 
@@ -45,10 +45,10 @@ export const addBook = async (book: NewBook): Promise<number> => {
       await insertWordsAppearances(chunk);
     }
 
-    await connection.query('COMMIT');
+    await getConnection().query('COMMIT');
     return book_id;
   } catch (e) {
-    await connection.query('ROLLBACK');
+    await getConnection().query('ROLLBACK');
     throw e;
   }
 };
