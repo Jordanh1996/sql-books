@@ -27,9 +27,6 @@ export const GroupTable = ({
         count: group.words.length,
         actions: (
           <>
-            <IconButton color="primary" key="edit">
-              <EditRoundedIcon />
-            </IconButton>
             <IconButton
               color="secondary"
               onClick={() => onDelete(group)}

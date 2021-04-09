@@ -5,17 +5,25 @@ import { GroupForm } from '../../components/groups/group-form/GroupForm';
 import { GroupWithWords } from '../../db/tables/group/group.interface';
 import { GroupList } from '../../components/groups/GroupList';
 import { queries } from '../../db/queries';
+import { Filter } from '../../components/groups/group-filter/GroupFilter';
 
 export const GroupsPage = () => {
   const [groups, setGroups] = useState<GroupWithWords[]>([]);
-  const [lastFilter, setLastFilter] = useState<unknown>({});
+  const [lastFilter, setLastFilter] = useState<Filter>({ name: '', words: [] });
   const [loading, setLoading] = useState<boolean>(true);
 
   const getGroups = useCallback(
-    async (options: any = {}) => {
+    async (options: Filter = { name: '', words: [] }) => {
       setLastFilter(options);
       setLoading(true);
-      const groups = await queries.selectGroupsWithWords(options);
+      let groups = await queries.selectGroupsWithWords(options);
+      if (options.name) {
+        const regexp = new RegExp(options.name);
+        groups = groups.filter(group => group.name.match(regexp));
+      }
+      if (options.words.length) {
+        groups = groups.filter(group => options.words.filter(word => group.words.includes(word)).length);
+      }
       setGroups(groups);
       setLoading(false);
     },

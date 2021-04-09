@@ -91,6 +91,7 @@ const createWindow = async () => {
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+  windows.mainWindow = mainWindow;
 };
 
 /**
@@ -132,3 +133,9 @@ ipcMain.on('get-import-path', async (event: IpcMainEvent) => {
   });
   event.sender.send('get-import-path', res);
 });
+
+class Windows {
+  mainWindow: BrowserWindow | null;
+}
+
+export const windows = new Windows();

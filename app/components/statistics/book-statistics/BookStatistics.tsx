@@ -61,6 +61,9 @@ export const BookStatistics = ({}: BookStatisticsProps) => {
   }, []);
 
   useEffect(() => {
+    [setWordCount, setDistinctWordCount, setLetterCount, setLetterAvg, setParagraphWordCount, setSentenceWordCount, setLineWordCount, setParagraphWordAvg, setSentenceWordAvg, setLineWordAvg, setParagraphLetterAvg, setSentenceLetterAvg, setLineLetterAvg]
+      .forEach(fn => fn('Loading...'));
+
     queries.countWords(selectedBooks).then(setWordCount);
     queries.countWords(selectedBooks, 'word').then(setDistinctWordCount);
     queries.sumLetters(selectedBooks).then(setLetterCount);

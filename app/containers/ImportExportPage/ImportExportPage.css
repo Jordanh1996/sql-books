@@ -26,3 +26,9 @@
   height: 46px;
   margin-top: 36px !important;
 }
+
+.stepperContainer {
+  margin: 0 auto;
+  max-width: 1000px;  
+  width: 100%;
+}

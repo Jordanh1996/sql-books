@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 import { ipcRenderer, OpenDialogReturnValue, SaveDialogReturnValue } from 'electron';
 import { queries } from '../../db/queries';
+import { ImportStepper } from '../../components/steppers/import';
 
 const getExportPath = (): Promise<SaveDialogReturnValue> => {
   return new Promise((resolve) => {
@@ -31,12 +32,14 @@ const getImportPath = (): Promise<OpenDialogReturnValue> => {
 
 export const ImportExportPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [showImport, setShowImport] = useState<boolean>(false);
 
   const onExportDB = useCallback(async () => {
     try {
       const { canceled, filePath } = await getExportPath();
       if (canceled) return;
       setLoading(true);
+      setShowImport(false);
       await queries.exportDB(filePath);
     } catch (err) {
       console.error(err);
@@ -50,9 +53,8 @@ export const ImportExportPage = () => {
       const { canceled, filePaths } = await getImportPath();
       if (canceled) return;
       const [filePath] = filePaths;
+      setShowImport(true);
       setLoading(true);
-      await queries.dropTables();
-      await queries.createTables();
       await queries.importDB(filePath);
     } catch (err) {
       console.error(err);
@@ -96,6 +98,10 @@ export const ImportExportPage = () => {
             </Button>
           </div>
         </div>
+      </Paper>
+
+      <Paper className={styles.stepperContainer}>
+        <ImportStepper showImport={showImport} />
       </Paper>
     </div>
   );

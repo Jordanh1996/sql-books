@@ -3,6 +3,9 @@ import { parseStringPromise } from 'xml2js';
 import _ from 'lodash';
 import { connection } from '../connection';
 import { queries } from '../queries';
+import { BrowserWindow } from 'electron';
+
+let window: BrowserWindow;
 
 interface XMLTree {
   book_db: {
@@ -91,16 +94,28 @@ interface Tree {
 }
 
 export const importDB = async (path = __dirname + '/db.xml') => {
+  window = (await import('../../main.dev')).windows.mainWindow;
+  window.webContents.send('import:start');
   const xml = await fs.readFile(path, 'utf-8');
+  window.webContents.send('import:progress', { step: 0, progress: 40 });
   const tree = await parseStringPromise(xml);
+  window.webContents.send('import:progress', { step: 0, progress: 60 });
 
   try {
     await connection.query('BEGIN');
 
+    await queries.dropTables();
+    window.webContents.send('import:progress', { step: 0, progress: 80 });
+    await queries.createTables();
+    window.webContents.send('import:progress', { step: 0, progress: 100 });
     await importWords(tree);
+    window.webContents.send('import:progress', { step: 1, progress: 100 });
     await importBooks(tree);
+    window.webContents.send('import:progress', { step: 2, progress: 100 });
     await importGroups(tree);
+    window.webContents.send('import:progress', { step: 3, progress: 100 });
     await importPhrases(tree);
+    window.webContents.send('import:progress', { step: 4, progress: 100 });
     await updateSerialIds();
     await connection.query('COMMIT');
   } catch(err) {
@@ -119,7 +134,7 @@ const normalizeWords = (tree: XMLTree) => {
 const importWords = async (tree: XMLTree) => {
   const normalizedWords = normalizeWords(tree);
   
-  return withChunks(queries.insertWords, normalizedWords);
+  return withChunks(queries.insertWords, normalizedWords, (progress: number) => window.webContents.send('import:progress', { step: 1, progress }));
 };
 
 const normalizeBooks = (tree: XMLTree) => {
@@ -168,7 +183,8 @@ const importBooks = async (tree: XMLTree) => {
   }, []);
 
   await queries.insertBooksWithIds(normalizedBooks);
-  await withChunks(queries.insertWordsAppearances, wordsAppearances);
+  window.webContents.send('import:progress', { step: 2, progress: 10 });
+  await withChunks(queries.insertWordsAppearances, wordsAppearances, (progress: number) => window.webContents.send('import:progress', { step: 2, progress }));
 };
 
 const normalizeGroups = (tree: XMLTree) => {
@@ -195,6 +211,7 @@ const importGroups = async (tree: XMLTree) => {
   }, []);
 
   await queries.insertGroups(normalizedGroups);
+  window.webContents.send('import:progress', { step: 3, progress: 30 });
   await queries.insertGroupsWords(groupsWords);
 };
 
@@ -231,6 +248,7 @@ const importPhrases = async (tree: XMLTree) => {
       word_count: phrase_words.length,
     }))
   );
+  window.webContents.send('import:progress', { step: 4, progress: 30 });
   await queries.insertPhrasesWords(phrasesWords);
 };
 
@@ -247,9 +265,11 @@ const updateTableSerialId = async (tableName: string, columnName: string) => {
 
 const CHUNK_SIZE = 500;
 
-const withChunks = async (fn: Function, arr: Array<unknown>) => {
+const withChunks = async (fn: Function, arr: Array<unknown>, cb?: Function) => {
   const chunks = _.chunk(arr, CHUNK_SIZE);
+  let i = 1;
   for (const chunk of chunks) {
     await fn(chunk);
+    cb?.(Math.round(100 / chunks.length * i++));
   }
 };

@@ -2,22 +2,9 @@ import { GroupWithWords, Group } from '../group.interface';
 import { connection } from '../../../connection';
 
 export interface SelectGroupOptions {
-  // title?: string;
-  // author?: string;
-  // words?: string[];
+  name: string;
+  words?: string[];
 }
-
-// const createTitleCondition = (title: string) => mysql.format('title LIKE %?%', [title]);
-
-// const createAuthorCondition = (author: string) => mysql.format('author LIKE %?%', [author]);
-
-// const createWordsAppearanceCondition = (words: string[]) => {
-
-// }
-
-// const createConditions = (selectBooksOptions): string[] => {
-
-// };
 
 export const selectGroupsWithWords = async (
   options: SelectGroupOptions
