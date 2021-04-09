@@ -3,7 +3,6 @@ import { promises as fs } from 'fs';
 import moment, { Moment } from 'moment';
 import clsx from 'clsx';
 import styles from './BookForm.css';
-import { addBook } from '../../../db/utils/add-book';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -18,6 +17,7 @@ import { getAuthor } from '../../../utils/book/getAuthor';
 import { getTitle } from '../../../utils/book/getTitle';
 import { getReleaseDate } from '../../../utils/book/getReleaseDate';
 import toastr from 'toastr';
+import { queries } from '../../../db/queries';
 
 enum actions {
   TITLE_CHANGE = 'TITLE_CHANGE',
@@ -76,7 +76,7 @@ export const BookForm = ({ onAddBook = () => {} }: BookFormProps) => {
   const submit = useCallback(async () => {
     try {
       setLoading(true);
-      await addBook({
+      await queries.addBook({
         ...formState,
         release_date: formState.release_date
           ? formState.release_date.toDate()

@@ -1,14 +1,10 @@
 import React, { useReducer } from 'react';
 import clsx from 'clsx';
 import styles from './WordsFilter.css';
-import { WordList } from '../../word-list/WordList';
-import IconButton from '@material-ui/core/IconButton';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import BackspaceRoundedIcon from '@material-ui/icons/BackspaceRounded';

@@ -9,11 +9,9 @@ const connection = new Client({
   query_timeout: 50000,
 });
 
-const p = connection.connect();
-
 export const connect = async (): Promise<void> => {
   try {
-    await p;
+    await connection.connect();;
     try {
       await createTables();
     } catch (err) {

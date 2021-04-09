@@ -4,11 +4,8 @@ import styles from './ImportExportPage.css';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
-import { exportDB } from '../../db/export/export-db';
 import { ipcRenderer, OpenDialogReturnValue, SaveDialogReturnValue } from 'electron';
-import { importDB } from '../../db/export/import-db';
-import { dropTables } from '../../db/tables/drop-tables';
-import { createTables } from '../../db/tables/create-tables';
+import { queries } from '../../db/queries';
 
 const getExportPath = (): Promise<SaveDialogReturnValue> => {
   return new Promise((resolve) => {
@@ -40,7 +37,7 @@ export const ImportExportPage = () => {
       const { canceled, filePath } = await getExportPath();
       if (canceled) return;
       setLoading(true);
-      await exportDB(filePath);
+      await queries.exportDB(filePath);
     } catch (err) {
       console.error(err);
     } finally {
@@ -54,9 +51,9 @@ export const ImportExportPage = () => {
       if (canceled) return;
       const [filePath] = filePaths;
       setLoading(true);
-      await dropTables();
-      await createTables();
-      await importDB(filePath);
+      await queries.dropTables();
+      await queries.createTables();
+      await queries.importDB(filePath);
     } catch (err) {
       console.error(err);
     } finally {

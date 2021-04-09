@@ -7,6 +7,9 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import { Store } from '../store';
 import Routes from '../Routes';
+import { wrapRendererQueries } from '../db/queries';
+
+wrapRendererQueries();
 
 type Props = {
   store: Store;

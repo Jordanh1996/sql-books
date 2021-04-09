@@ -5,12 +5,9 @@ import styles from './BooksPage.css';
 import { BookList } from '../../components/books/book-list/BookList';
 import { BookForm } from '../../components/books/book-form/BookForm';
 import { Book } from '../../db/tables/book/book.interface';
-import {
-  selectBooks,
-  SelectBooksOptions,
-} from '../../db/tables/book/queries/select-books';
-import { deleteBook } from '../../db/tables/book/queries/delete-book';
+import { SelectBooksOptions } from '../../db/tables/book/queries/select-books';
 import { BookModal, OpenedBook } from '../../components/common/BookModal';
+import { queries } from '../../db/queries';
 
 export const BooksPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -42,7 +39,7 @@ export const BooksPage = () => {
     async (options: SelectBooksOptions = {}) => {
       setLastFilter(options);
       setLoading(true);
-      const books = await selectBooks(options);
+      const books = await queries.selectBooks(options);
       setBooks(books);
       setLoading(false);
     },
@@ -51,7 +48,7 @@ export const BooksPage = () => {
 
   const removeBook = useCallback(
     (book: Book) => {
-      deleteBook(book.book_id);
+      queries.deleteBook(book.book_id);
       setBooks(books.filter((cur) => cur.book_id !== book.book_id));
     },
     [setBooks, books]
